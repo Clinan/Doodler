@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/color_select_layout">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/color_select_layout"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintCircleRadius="15dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
+
+        <com.christophesmet.android.views.colorpicker.ColorPickerView
+            android:id="@+id/colorpicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:radiusOffset="24dp"
+            app:thumbDrawable="@drawable/img_wheel_handle"
+            app:wheelDrawable="@drawable/img_wheel">
+
+            <View
+                android:id="@+id/result_color"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center" />
+        </com.christophesmet.android.views.colorpicker.ColorPickerView>
+
+        <EditText
+            android:id="@+id/color_text_et"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/button2"
+            android:layout_alignBottom="@+id/button2"
+            android:layout_centerHorizontal="true"
+            android:background="@color/white" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/colorpicker"
+            android:layout_below="@+id/colorpicker"
+            android:background="@color/colorSkyBlue"
+            android:text="确认" />
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>
