@@ -95,7 +95,7 @@ public class DoodleView extends View {
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         }
         mCanvas = new Canvas(mBitmap);
-        mCanvas.drawColor(Color.TRANSPARENT);
+        mCanvas.drawColor(Color.WHITE);
     }
 
     @Override
@@ -236,6 +236,10 @@ public class DoodleView extends View {
             }
             invalidate();
         }
+    }
+
+    public void redo(){
+
     }
 
     /**
