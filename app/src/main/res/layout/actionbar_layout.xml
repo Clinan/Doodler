@@ -53,12 +53,12 @@
             android:layout_weight="1"
             android:src="@drawable/ic_color_lens_white_24dp" />
 
-        <ImageView
-            android:id="@+id/eraser_bar_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/ic_panorama_wide_angle_white_24dp" />
+        <!--<ImageView-->
+            <!--android:id="@+id/eraser_bar_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:src="@drawable/ic_panorama_wide_angle_white_24dp" />-->
 
         <ImageView
             android:id="@+id/background_color_bar_btn"

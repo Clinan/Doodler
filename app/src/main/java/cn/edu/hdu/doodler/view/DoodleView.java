@@ -22,13 +22,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 
 
-/***
- * 一些想法
- * 对于加载撤销和重做功能，可以做一个List<Canvas>变量 用于保存之前更新的试图。达到
- *
- *
- * (3)社交分享功能 是实现activity的隐性调用。
- */
+
 public class DoodleView extends View {
     private static final String TAG = "DrawingView";
     private static final float TOUCH_TOLERANCE = 4;
@@ -42,6 +36,7 @@ public class DoodleView extends View {
     private float mX, mY;
     private float mProportion = 0;
     private LinkedList<DrawPath> savePath;
+    private LinkedList<DrawPath> removePath;
     private DrawPath mLastDrawPath;
     private Matrix matrix;
 
@@ -63,6 +58,7 @@ public class DoodleView extends View {
         mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mDrawMode = false;
         savePath = new LinkedList<>();
+        removePath = new LinkedList<>();
         matrix = new Matrix();
         initializePen();
     }
@@ -96,6 +92,8 @@ public class DoodleView extends View {
         }
         mCanvas = new Canvas(mBitmap);
         mCanvas.drawColor(Color.WHITE);
+        mOriginBitmap=Bitmap.createBitmap(getMeasuredWidth(),getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+
     }
 
     @Override
@@ -216,6 +214,7 @@ public class DoodleView extends View {
         mOriginBitmap = bitmap;
         mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         mCanvas = new Canvas(mBitmap);
+        savePath.clear();
         invalidate();
     }
 
@@ -223,10 +222,11 @@ public class DoodleView extends View {
         Log.d(TAG, "undo: recall last path");
         if (savePath != null && savePath.size() > 0) {
             // 清空画布
-            mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            loadImage(mOriginBitmap);
-
-            savePath.removeLast();
+            mCanvas.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR);
+            mBitmap = mOriginBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            mCanvas = new Canvas(mBitmap);
+            invalidate();
+            removePath.add(savePath.removeLast());
 
             // 将路径保存列表中的路径重绘在画布上 遍历绘制
             for (DrawPath dp : savePath) {
@@ -239,7 +239,20 @@ public class DoodleView extends View {
     }
 
     public void redo(){
+        if (removePath!=null&&removePath.size()>0){
+            // 清空画布
+            mCanvas.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR);
+            mBitmap = mOriginBitmap.copy(Bitmap.Config.ARGB_8888, true);
+            mCanvas = new Canvas(mBitmap);
+            invalidate();
+            savePath.add(removePath.removeFirst());
 
+            for (DrawPath dp : savePath) {
+                mPaint.setColor(dp.getPaintColor());
+                mPaint.setStrokeWidth(dp.getPaintWidth());
+                mCanvas.drawPath(dp.path, mPaint);
+            }
+        }
     }
 
     /**
