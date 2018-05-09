@@ -19,6 +19,7 @@ import android.view.View;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 
@@ -39,6 +40,7 @@ public class DoodleView extends View {
     private LinkedList<DrawPath> removePath;
     private DrawPath mLastDrawPath;
     private Matrix matrix;
+    private @ColorInt int backgroupColor=Color.WHITE;
 
     public DoodleView(Context c) {
         this(c, null);
@@ -180,6 +182,14 @@ public class DoodleView extends View {
 
     @Override
     public void setBackgroundColor(int color) {
+        backgroupColor=color;
+
+        savePath.clear();
+        removePath.clear();
+
+        int[] fillColor=new int[getWidth()*getHeight()];
+        Arrays.fill(fillColor,backgroupColor);
+        mOriginBitmap=Bitmap.createBitmap(fillColor,getWidth(),getHeight(), Bitmap.Config.ARGB_8888);
         mCanvas.drawColor(color);
         super.setBackgroundColor(color);
     }
@@ -222,7 +232,7 @@ public class DoodleView extends View {
         Log.d(TAG, "undo: recall last path");
         if (savePath != null && savePath.size() > 0) {
             // 清空画布
-            mCanvas.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR);
+            mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
             mBitmap = mOriginBitmap.copy(Bitmap.Config.ARGB_8888, true);
             mCanvas = new Canvas(mBitmap);
             invalidate();
@@ -241,7 +251,7 @@ public class DoodleView extends View {
     public void redo(){
         if (removePath!=null&&removePath.size()>0){
             // 清空画布
-            mCanvas.drawColor(Color.WHITE, PorterDuff.Mode.CLEAR);
+            mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
             mBitmap = mOriginBitmap.copy(Bitmap.Config.ARGB_8888, true);
             mCanvas = new Canvas(mBitmap);
             invalidate();
@@ -256,7 +266,7 @@ public class DoodleView extends View {
     }
 
     /**
-     * 保存图片，其实我个人建议在其他类里面写保存方法，{@link #getImageBitmap()}就是内容
+     * 保存图片
      * @param filePath 路径名
      * @param filename 文件名
      * @param format 存储格式

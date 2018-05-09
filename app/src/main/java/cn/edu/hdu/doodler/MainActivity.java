@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -31,7 +32,7 @@ import cn.edu.hdu.doodler.view.ColorPickerPopupWindow;
 import cn.edu.hdu.doodler.view.DoodleView;
 
 public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+        implements View.OnClickListener, SeekBar.OnSeekBarChangeListener,View.OnTouchListener {
     private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton,mRedoButton, mShareButton;
     private DoodleView mDrawingView;
     private SeekBar mPenSizeSeekbar, mEraserSeekbar;
@@ -71,11 +72,20 @@ public class MainActivity extends AppCompatActivity
         mPenColorButton.setOnClickListener(this);
         mBackgroundColorButton.setOnClickListener(this);
         mPenSizeSeekbar.setOnSeekBarChangeListener(this);
-        mEraserSeekbar.setOnSeekBarChangeListener(this);
+//        mEraserSeekbar.setOnSeekBarChangeListener(this);
         mLoadButton.setOnClickListener(this);
         mRedoButton.setOnClickListener(this);
         mUndoButton.setOnClickListener(this);
         mShareButton.setOnClickListener(this);
+
+        mSaveButton.setOnTouchListener(this);
+        mLoadButton.setOnTouchListener(this);
+        mPenButton.setOnTouchListener(this);
+        mPenColorButton.setOnTouchListener(this);
+        mBackgroundColorButton.setOnTouchListener(this);
+        mRedoButton.setOnTouchListener(this);
+        mUndoButton.setOnTouchListener(this);
+        mShareButton.setOnTouchListener(this);
     }
 
     private void initializeUI() {
@@ -90,7 +100,7 @@ public class MainActivity extends AppCompatActivity
         mUndoButton             = mActionBarView.findViewById(R.id.undo_bar_btn);
         mShareButton             = mActionBarView.findViewById(R.id.share_bar_btn);
         mPenSizeSeekbar         = findViewById(R.id.pen_size_seekbar);
-        mEraserSeekbar          = findViewById(R.id.eraser_size_seekbar);
+//        mEraserSeekbar          = findViewById(R.id.eraser_size_seekbar);
 
         //初始化界面时 默认选中画笔
         onClick(mPenButton);
@@ -177,9 +187,9 @@ public class MainActivity extends AppCompatActivity
             case R.id.pen_size_seekbar:
                 mDrawingView.setPenSize(i);
                 break;
-            case R.id.eraser_size_seekbar:
+//            case R.id.eraser_size_seekbar:
 //                mDrawingView.setEraserSize(i);
-                break;
+//                break;
         }
     }
 
@@ -282,8 +292,17 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-
-
-
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                v.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
+                onClick(v);
+                break;
+            case MotionEvent.ACTION_UP:
+                v.setBackground(null);
+                break;
+        }
+        return true;
+    }
 }
