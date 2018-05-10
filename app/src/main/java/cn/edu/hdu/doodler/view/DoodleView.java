@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 
-
 public class DoodleView extends View {
     private static final String TAG = "DrawingView";
     private static final float TOUCH_TOLERANCE = 4;
@@ -40,7 +39,8 @@ public class DoodleView extends View {
     private LinkedList<DrawPath> removePath;
     private DrawPath mLastDrawPath;
     private Matrix matrix;
-    private @ColorInt int backgroupColor=Color.WHITE;
+    private @ColorInt
+    int backgroupColor = Color.WHITE;
 
     public DoodleView(Context c) {
         this(c, null);
@@ -94,7 +94,7 @@ public class DoodleView extends View {
         }
         mCanvas = new Canvas(mBitmap);
         mCanvas.drawColor(Color.WHITE);
-        mOriginBitmap=Bitmap.createBitmap(getMeasuredWidth(),getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+        mOriginBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
     }
 
@@ -172,14 +172,14 @@ public class DoodleView extends View {
 
     @Override
     public void setBackgroundColor(int color) {
-        backgroupColor=color;
+        backgroupColor = color;
 
         savePath.clear();
         removePath.clear();
 
-        int[] fillColor=new int[getWidth()*getHeight()];
-        Arrays.fill(fillColor,backgroupColor);
-        mOriginBitmap=Bitmap.createBitmap(fillColor,getWidth(),getHeight(), Bitmap.Config.ARGB_8888);
+        int[] fillColor = new int[getWidth() * getHeight()];
+        Arrays.fill(fillColor, backgroupColor);
+        mOriginBitmap = Bitmap.createBitmap(fillColor, getWidth(), getHeight(), Bitmap.Config.ARGB_8888);
         mCanvas.drawColor(color);
         super.setBackgroundColor(color);
     }
@@ -211,13 +211,13 @@ public class DoodleView extends View {
 
     public void loadImage(Bitmap bitmap) {
         mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        Matrix m=new Matrix();
+        Matrix m = new Matrix();
         float proportion = (float) getHeight() / mBitmap.getHeight();
         float proportionHor = (float) getWidth() / mBitmap.getWidth();
-        m.postScale(proportionHor,proportion);
-        mBitmap=Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),m,true);
-        mCanvas=new Canvas(mBitmap);
-        mOriginBitmap=mBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        m.postScale(proportionHor, proportion);
+        mBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+        mCanvas = new Canvas(mBitmap);
+        mOriginBitmap = mBitmap.copy(Bitmap.Config.ARGB_8888, true);
         savePath.clear();
         invalidate();
     }
@@ -241,14 +241,14 @@ public class DoodleView extends View {
         }
     }
 
-    public void redo(){
-        if (removePath!=null&&removePath.size()>0){
+    public void redo() {
+        if (removePath != null && removePath.size() > 0) {
             // 清空画布
             mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
             mBitmap = mOriginBitmap.copy(Bitmap.Config.ARGB_8888, true);
             mCanvas = new Canvas(mBitmap);
             invalidate();
-            savePath.add(removePath.removeFirst());
+            savePath.add(removePath.removeLast());
 
             for (DrawPath dp : savePath) {
                 mPaint.setColor(dp.getPaintColor());
@@ -260,10 +260,11 @@ public class DoodleView extends View {
 
     /**
      * 保存图片
+     *
      * @param filePath 路径名
      * @param filename 文件名
-     * @param format 存储格式
-     * @param quality 质量
+     * @param format   存储格式
+     * @param quality  质量
      * @return 是否保存成功
      */
     public boolean saveImage(String filePath, String filename, Bitmap.CompressFormat format,
