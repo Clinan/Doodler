@@ -102,17 +102,7 @@ public class DoodleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // 根据图片尺寸缩放图片，同样只考虑了高大于宽的情况
-        float proportion = (float) canvas.getHeight() / mBitmap.getHeight();
-        if (proportion < 1) {
-            mProportion = proportion;
-            matrix.reset();
-            matrix.postScale(proportion, proportion);
-            matrix.postTranslate((canvas.getWidth() - mBitmap.getWidth() * proportion) / 2, 0);
-            canvas.drawBitmap(mBitmap, matrix, mBitmapPaint);
-        } else {
-            mProportion = 0;
-            canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
-        }
+        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
     }
 
     @Override
@@ -220,16 +210,19 @@ public class DoodleView extends View {
     }
 
     public void loadImage(Bitmap bitmap) {
-        Log.d(TAG, "loadImage: ");
-        mOriginBitmap = bitmap;
         mBitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-        mCanvas = new Canvas(mBitmap);
+        Matrix m=new Matrix();
+        float proportion = (float) getHeight() / mBitmap.getHeight();
+        float proportionHor = (float) getWidth() / mBitmap.getWidth();
+        m.postScale(proportionHor,proportion);
+        mBitmap=Bitmap.createBitmap(bitmap,0,0,bitmap.getWidth(),bitmap.getHeight(),m,true);
+        mCanvas=new Canvas(mBitmap);
+        mOriginBitmap=mBitmap.copy(Bitmap.Config.ARGB_8888, true);
         savePath.clear();
         invalidate();
     }
 
     public void undo() {
-        Log.d(TAG, "undo: recall last path");
         if (savePath != null && savePath.size() > 0) {
             // 清空画布
             mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
