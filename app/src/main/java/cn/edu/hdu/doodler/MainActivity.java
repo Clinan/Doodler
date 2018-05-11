@@ -136,6 +136,8 @@ public class MainActivity extends AppCompatActivity
                 onClick(mPenButton);
                 break;
 
+
+
             case R.id.pen_bar_btn:
 //                mDrawingView.initializePen();
                 mDrawingView.setPenColor(mPenColor);
