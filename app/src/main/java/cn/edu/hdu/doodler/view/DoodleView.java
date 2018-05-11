@@ -56,7 +56,6 @@ public class DoodleView extends View {
     }
 
     private void init() {
-        Log.d(TAG, "init: ");
         mBitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
         mDrawMode = false;
         savePath = new LinkedList<>();

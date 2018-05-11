@@ -6,35 +6,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Paint.Cap;
-import android.graphics.Paint.Style;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import br.tiagohm.circlecolorview.CircleColorView;
 
 /**
  * Created by arter on 2018/4/28.
  */
 
 public class ColorCircleView extends View {
-//    public ColorCircleView(Context context) {
-//        super(context);
-//    }
-//
-//    public ColorCircleView(Context context, @Nullable AttributeSet attrs) {
-//        this(context, attrs, 0);
-//    }
-//
-//    public ColorCircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-//        super(context, attrs, defStyleAttr);
-//        init();
-//    }
-//
-//    private void init() {
-//
-//    }
 
     private final float[] hsv;
     private float radius;

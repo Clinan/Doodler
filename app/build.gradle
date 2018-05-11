@@ -30,9 +30,6 @@ dependencies {
     }
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.github.tiagohm:CircleColorView:0.1.2'
-    compile 'com.dingmouren.colorpicker:colorpicker:1.0.1'
-    implementation 'com.pes.materialcolorpicker:library:1.2.0'
     compile 'com.github.christophesmet:colorpicker:d84191b1cf'
     compile 'com.android.support:design:25.1.1'
 
