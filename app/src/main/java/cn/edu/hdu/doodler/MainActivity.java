@@ -10,10 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,7 +33,6 @@ public class MainActivity extends AppCompatActivity
     private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton,mRedoButton, mShareButton;
     private DoodleView mDrawingView;
     private SeekBar mPenSizeSeekbar, mEraserSeekbar;
-    private View mActionBarView;
     private int mPenColor=Color.BLACK;
     public final static int IMAGE_REQUEST_CODE=1;
 
@@ -44,26 +40,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setCustomActionBar();
         initializeUI();
         setListeners();
 
     }
 
-    private void setCustomActionBar() {
-        ActionBar.LayoutParams lp = new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT, ActionBar.LayoutParams.MATCH_PARENT, Gravity.CENTER);
-        mActionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_layout, null);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setCustomView(mActionBarView, lp);
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setDisplayShowCustomEnabled(true);
-            actionBar.setDisplayShowHomeEnabled(false);
-            actionBar.setDisplayShowTitleEnabled(false);
-
-        }
-    }
 
     private void setListeners() {
         mSaveButton.setOnClickListener(this);
@@ -90,20 +71,20 @@ public class MainActivity extends AppCompatActivity
 
     private void initializeUI() {
         mDrawingView            = findViewById(R.id.scratch_pad);
-        mSaveButton             = mActionBarView.findViewById(R.id.save_bar_btn);
-        mLoadButton             = mActionBarView.findViewById(R.id.photo_bar_btn);
-        mPenButton              = mActionBarView.findViewById(R.id.pen_bar_btn);
-//        mEraserButton           = mActionBarView.findViewById(R.id.eraser_bar_btn);
-        mPenColorButton         = mActionBarView.findViewById(R.id.color_bar_btn);
-        mBackgroundColorButton  = mActionBarView.findViewById(R.id.background_color_bar_btn);
-        mRedoButton             = mActionBarView.findViewById(R.id.redo_bar_btn);
-        mUndoButton             = mActionBarView.findViewById(R.id.undo_bar_btn);
-        mShareButton             = mActionBarView.findViewById(R.id.share_bar_btn);
+        mSaveButton             = findViewById(R.id.save_btn);
+        mLoadButton             = findViewById(R.id.photo_btn);
+        mPenButton              = findViewById(R.id.pen_btn);
+//        mEraserButton           = mActionBarView.findViewById(R.id.eraser_btn);
+        mPenColorButton         = findViewById(R.id.color_btn);
+        mBackgroundColorButton  = findViewById(R.id.background_color_btn);
+        mRedoButton             = findViewById(R.id.redo_btn);
+        mUndoButton             = findViewById(R.id.undo_btn);
+        mShareButton             =findViewById(R.id.share_btn);
         mPenSizeSeekbar         = findViewById(R.id.pen_size_seekbar);
 //        mEraserSeekbar          = findViewById(R.id.eraser_size_seekbar);
 
         //初始化界面时 默认选中画笔
-        onClick(mPenButton);
+//        onClick(mPenButton);
 
     }
 
@@ -117,46 +98,45 @@ public class MainActivity extends AppCompatActivity
         mPenColorButton.setBackground(null);
         mBackgroundColorButton.setBackground(null);
         switch (view.getId()) {
-            case R.id.save_bar_btn:
+            case R.id.save_btn:
                 String fileName=String.valueOf(System.currentTimeMillis());
                 mDrawingView.saveImage(Environment.getExternalStorageDirectory().toString(), fileName,
                         Bitmap.CompressFormat.PNG, 100);
-                Toast.makeText(getApplicationContext(),"保存的路径为：\n"+Environment.getExternalStorageDirectory().toString()+ fileName+"png",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"保存的路径为：\n"+Environment.getExternalStorageDirectory().toString()+ fileName+".png",Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.photo_bar_btn:
+            case R.id.photo_btn:
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
                 break;
-            case R.id.undo_bar_btn:
+            case R.id.undo_btn:
                 mDrawingView.undo();
                 onClick(mPenButton);
                 break;
-            case R.id.redo_bar_btn:
+            case R.id.redo_btn:
                 mDrawingView.redo();
                 onClick(mPenButton);
                 break;
 
 
 
-            case R.id.pen_bar_btn:
+            case R.id.pen_btn:
 //                mDrawingView.initializePen();
                 mDrawingView.setPenColor(mPenColor);
                 mPenButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
                 break;
-            case R.id.color_bar_btn:
+            case R.id.color_btn:
                 final ColorPickerPopupWindow colorPickerPopupWindow=new ColorPickerPopupWindow(mPenColorButton,getApplicationContext());
                 //监听窗口关闭回调事件 当取色器关闭时，选择为画笔
                 colorPickerPopupWindow.popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         mPenColor=colorPickerPopupWindow.selectColor;;
-                        //触发画笔点击事件
-                        onClick(mPenButton);
+                        mDrawingView.setPenColor(mPenColor);
                     }
                 });
                 mPenColorButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
                 break;
-            case R.id.background_color_bar_btn:
+            case R.id.background_color_btn:
                 final ColorPickerPopupWindow backgroundColorPickerPopupWindow=new ColorPickerPopupWindow(mPenColorButton,getApplicationContext());
                 //监听窗口关闭回调事件 当取色器关闭时，选择为画笔
                 backgroundColorPickerPopupWindow.popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -168,7 +148,7 @@ public class MainActivity extends AppCompatActivity
                 mBackgroundColorButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
                 break;
 
-            case R.id.share_bar_btn:
+            case R.id.share_btn:
                 File file = bitMap2File(compressImage(getBitmapByView(mDrawingView)));
                 if (file != null && file.exists() && file.isFile()) {
                     //由文件得到uri
@@ -265,15 +245,11 @@ public class MainActivity extends AppCompatActivity
      * @return
      */
     public File bitMap2File(Bitmap bitmap) {
-
-
         String path = "";
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
             path = Environment.getExternalStorageDirectory() + File.separator;//保存到sd根目录下
         }
 
-
-        //        File f = new File(path, System.currentTimeMillis() + ".jpg");
         File f = new File(path, String.valueOf(System.currentTimeMillis() )+ ".png");
         if (f.exists()) {
             f.delete();

@@ -93,7 +93,7 @@ public class DoodleView extends View {
             mBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         }
         mCanvas = new Canvas(mBitmap);
-        mCanvas.drawColor(Color.WHITE);
+        mCanvas.drawColor(backgroupColor);
         mOriginBitmap = Bitmap.createBitmap(getMeasuredWidth(), getMeasuredHeight(), Bitmap.Config.ARGB_8888);
 
     }
