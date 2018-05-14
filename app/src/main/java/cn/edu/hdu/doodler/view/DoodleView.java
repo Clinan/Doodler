@@ -33,7 +33,7 @@ public class DoodleView extends View {
     private Paint mPaint;
     private Paint mPenPaint;
     private float mPenSize = 2.0f;
-    private int mPenAlpha=255;
+    private int mPenAlpha = 255;
     private boolean mDrawMode;
     private float mX, mY;
     private @ColorInt
@@ -146,7 +146,6 @@ public class DoodleView extends View {
                 add2HistoryBitmaps(mBitmap.copy(Bitmap.Config.ARGB_8888, true));//添加到历史记录中
                 isUndo = false;
                 isRedo = false;
-                Log.d(TAG, "onTouchEvent");
                 mPath = null;
                 break;
             default:
@@ -249,7 +248,6 @@ public class DoodleView extends View {
      * 撤销
      */
     public void undo() {
-        Log.d(TAG, "Undo historyBitmaps:" + historyBitmaps.size());
         if (historyBitmaps != null && historyBitmaps.size() > 0) {
             // 清空画布
             mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
@@ -270,8 +268,6 @@ public class DoodleView extends View {
      * 重做
      */
     public void redo() {
-        Log.d(TAG, "removeBitmaps:" + removeBitmaps.size());
-
         if (removeBitmaps != null && removeBitmaps.size() > 0) {
             // 清空画布
             mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
