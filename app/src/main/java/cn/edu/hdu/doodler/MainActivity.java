@@ -6,17 +6,22 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.Toast;
+
+import com.christophesmet.android.views.colorpicker.ColorPickerView;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -30,7 +35,9 @@ import cn.edu.hdu.doodler.view.DoodleView;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, SeekBar.OnSeekBarChangeListener, View.OnTouchListener {
-    private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton, mRedoButton, mShareButton;
+    private static final String TAG = "MainActivity";
+    private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton, mRedoButton, mShareButton, mClearButton, mEraserButton, mStrokeButton;
+    //    private ImageButton mEraserButton;
     private DoodleView mDrawingView;
     private SeekBar mPenSizeSeekbar;
     private int mPenColor = Color.BLACK;
@@ -56,6 +63,9 @@ public class MainActivity extends AppCompatActivity
         mRedoButton.setOnClickListener(this);
         mUndoButton.setOnClickListener(this);
         mShareButton.setOnClickListener(this);
+        mEraserButton.setOnClickListener(this);
+        mClearButton.setOnClickListener(this);
+        mStrokeButton.setOnClickListener(this);
 
         mSaveButton.setOnTouchListener(this);
         mLoadButton.setOnTouchListener(this);
@@ -65,6 +75,9 @@ public class MainActivity extends AppCompatActivity
         mRedoButton.setOnTouchListener(this);
         mUndoButton.setOnTouchListener(this);
         mShareButton.setOnTouchListener(this);
+        mEraserButton.setOnTouchListener(this);
+        mClearButton.setOnTouchListener(this);
+        mStrokeButton.setOnTouchListener(this);
     }
 
     private void initializeUI() {
@@ -77,7 +90,10 @@ public class MainActivity extends AppCompatActivity
         mRedoButton = findViewById(R.id.redo_btn);
         mUndoButton = findViewById(R.id.undo_btn);
         mShareButton = findViewById(R.id.share_btn);
+        mEraserButton = findViewById(R.id.eraser_btn);
         mPenSizeSeekbar = findViewById(R.id.pen_size_seekbar);
+        mClearButton = findViewById(R.id.clear_btn);
+        mStrokeButton = findViewById(R.id.stroke_btn);
         //初始化界面时 默认选中画笔
 //        onClick(mPenButton);
 
@@ -113,6 +129,7 @@ public class MainActivity extends AppCompatActivity
 
 
             case R.id.pen_btn:
+                mDrawingView.initializeEraser();
                 mDrawingView.setPenColor(mPenColor);
                 mPenButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
                 break;
@@ -153,6 +170,61 @@ public class MainActivity extends AppCompatActivity
                     startActivity(Intent.createChooser(shareIntent, "分享图片"));
                 }
                 break;
+            case R.id.eraser_btn:
+                mDrawingView.initializeEraser();
+                PopupWindow eraser_pw = new PopupWindow(getApplicationContext());
+                View eraserView = View.inflate(getApplicationContext(), R.layout.eraser_layout, null);
+                SeekBar eraserSizeSeekbar = eraserView.findViewById(R.id.eraser_size_seekbar);
+                eraserSizeSeekbar.setProgress((int) mDrawingView.getEraserSize());
+                eraserSizeSeekbar.setOnSeekBarChangeListener(this);
+                eraser_pw.setContentView(eraserView);
+                eraser_pw.setWidth(720);
+                eraser_pw.setHeight(mEraserButton.getHeight());
+                eraser_pw.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#CCCCCC")));
+                // 设置可以获取焦点
+                eraser_pw.setFocusable(true);
+                eraser_pw.update();
+                eraser_pw.showAsDropDown(view, mEraserButton.getWidth() + 10, -mEraserButton.getHeight(), Gravity.CENTER);
+                break;
+            case R.id.clear_btn:
+                mDrawingView.clear();
+                break;
+
+            case R.id.stroke_btn:
+                PopupWindow popupWindow = new PopupWindow(getApplicationContext());
+                View pwview = View.inflate(getApplicationContext(), R.layout.color_select, null);
+                final SeekBar strokeSizeSeekBar = pwview.findViewById(R.id.stroke_size_seekbar);
+                pwview.findViewById(R.id.bar_layout).setVisibility(View.VISIBLE);
+                popupWindow.update();
+//                strokeSizeSeekBar.setOnSeekBarChangeListener(this);
+                ColorPickerView mColorPickerView = pwview.findViewById(R.id.colorpicker);
+                final View mColorView = pwview.findViewById(R.id.result_color);
+                final EditText colorTextEt = pwview.findViewById(R.id.color_text_et);
+                final int[] selectColor = new int[1];
+                mColorPickerView.setColorListener(new ColorPickerView.ColorListener() {
+
+                    @Override
+                    public void onColorSelected(final int color) {
+                        mColorView.setBackgroundColor(color);
+                        colorTextEt.setText("#" + Integer.toHexString(color).substring(2));
+                        selectColor[0] = color;
+                    }
+
+                });
+                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        mDrawingView.strokeImage(selectColor[0], strokeSizeSeekBar.getProgress());
+                    }
+                });
+                popupWindow.setContentView(pwview);
+                popupWindow.setWidth(720);
+                popupWindow.setHeight(1200);
+                popupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#F8F8F8")));
+                // 设置可以获取焦点
+                popupWindow.setFocusable(true);
+                popupWindow.update();
+                popupWindow.showAsDropDown(view, 0, 50);
         }
     }
 
@@ -161,6 +233,9 @@ public class MainActivity extends AppCompatActivity
         switch (seekBar.getId()) {
             case R.id.pen_size_seekbar:
                 mDrawingView.setPenSize(i);
+                break;
+            case R.id.eraser_size_seekbar:
+                mDrawingView.setEraserSize(i);
                 break;
         }
     }
