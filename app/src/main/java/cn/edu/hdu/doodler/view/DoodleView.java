@@ -406,5 +406,9 @@ public class DoodleView extends View {
 
     public void setPenAlpha(int mPenAlpha) {
         this.mPenAlpha = mPenAlpha;
+        mPenPaint.setAlpha(mPenAlpha);
+    }
+    public int getPenAlpha(){
+        return mPenAlpha;
     }
 }

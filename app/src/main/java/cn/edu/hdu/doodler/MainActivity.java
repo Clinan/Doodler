@@ -10,8 +10,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -39,7 +41,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton, mRedoButton, mShareButton, mClearButton, mEraserButton, mStrokeButton;
     //    private ImageButton mEraserButton;
     private DoodleView mDrawingView;
-    private SeekBar mPenSizeSeekbar;
+    private SeekBar mPenSizeSeekbar,mPenAlphaSeekbar;
     private int mPenColor = Color.BLACK;
     public final static int IMAGE_REQUEST_CODE = 1;
 
@@ -54,11 +56,14 @@ public class MainActivity extends AppCompatActivity
 
 
     private void setListeners() {
+        mPenSizeSeekbar.setOnSeekBarChangeListener(this);
+        mPenAlphaSeekbar.setOnSeekBarChangeListener(this);
+
+
         mSaveButton.setOnClickListener(this);
         mPenButton.setOnClickListener(this);
         mPenColorButton.setOnClickListener(this);
         mBackgroundColorButton.setOnClickListener(this);
-        mPenSizeSeekbar.setOnSeekBarChangeListener(this);
         mLoadButton.setOnClickListener(this);
         mRedoButton.setOnClickListener(this);
         mUndoButton.setOnClickListener(this);
@@ -66,6 +71,7 @@ public class MainActivity extends AppCompatActivity
         mEraserButton.setOnClickListener(this);
         mClearButton.setOnClickListener(this);
         mStrokeButton.setOnClickListener(this);
+
 
         mSaveButton.setOnTouchListener(this);
         mLoadButton.setOnTouchListener(this);
@@ -91,12 +97,23 @@ public class MainActivity extends AppCompatActivity
         mUndoButton = findViewById(R.id.undo_btn);
         mShareButton = findViewById(R.id.share_btn);
         mEraserButton = findViewById(R.id.eraser_btn);
-        mPenSizeSeekbar = findViewById(R.id.pen_size_seekbar);
         mClearButton = findViewById(R.id.clear_btn);
         mStrokeButton = findViewById(R.id.stroke_btn);
+
+
+        mPenAlphaSeekbar = findViewById(R.id.pen_alpha_seekbar);
+        mPenSizeSeekbar = findViewById(R.id.pen_size_seekbar);
         //初始化界面时 默认选中画笔
 //        onClick(mPenButton);
 
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                mPenAlphaSeekbar.setProgress(mDrawingView.getPenAlpha());
+                mPenSizeSeekbar.setProgress((int) mDrawingView.getPenSize());
+                Log.d("PenSize",mDrawingView.getPenSize()+"");
+            }
+        });
     }
 
     @Override
@@ -129,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
 
             case R.id.pen_btn:
-                mDrawingView.initializeEraser();
+                mDrawingView.initializePen();
                 mDrawingView.setPenColor(mPenColor);
                 mPenButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
                 break;
@@ -233,9 +250,15 @@ public class MainActivity extends AppCompatActivity
         switch (seekBar.getId()) {
             case R.id.pen_size_seekbar:
                 mDrawingView.setPenSize(i);
+                Log.d("PenSize",mDrawingView.getPenSize()+"");
+
                 break;
             case R.id.eraser_size_seekbar:
                 mDrawingView.setEraserSize(i);
+                break;
+            case R.id.pen_alpha_seekbar:
+                mDrawingView.setPenAlpha(i);
+                Log.d("pen_alpha_seekbar",""+i);
                 break;
         }
     }
