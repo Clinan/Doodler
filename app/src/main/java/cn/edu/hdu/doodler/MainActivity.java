@@ -33,7 +33,7 @@ import cn.edu.hdu.doodler.view.DoodleView;
 
 public class MainActivity extends AppCompatActivity
         implements View.OnClickListener, SeekBar.OnSeekBarChangeListener,View.OnTouchListener {
-    private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton,mRedoButton, mShareButton;
+    private ImageView mSaveButton, mPenButton, mPenColorButton, mBackgroundColorButton, mLoadButton, mUndoButton,mRedoButton, mShareButton,mClearButton,mEraserButton;
     private DoodleView mDrawingView;
     private SeekBar mPenSizeSeekbar, mEraserSeekbar;
     private View mActionBarView;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
     private void setListeners() {
         mSaveButton.setOnClickListener(this);
         mPenButton.setOnClickListener(this);
-//        mEraserButton.setOnClickListener(this);
+        mEraserButton.setOnClickListener(this);
         mPenColorButton.setOnClickListener(this);
         mBackgroundColorButton.setOnClickListener(this);
         mPenSizeSeekbar.setOnSeekBarChangeListener(this);
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity
         mRedoButton.setOnClickListener(this);
         mUndoButton.setOnClickListener(this);
         mShareButton.setOnClickListener(this);
+        mClearButton.setOnClickListener(this);
 
         mSaveButton.setOnTouchListener(this);
         mLoadButton.setOnTouchListener(this);
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity
         mRedoButton.setOnTouchListener(this);
         mUndoButton.setOnTouchListener(this);
         mShareButton.setOnTouchListener(this);
+        mClearButton.setOnTouchListener(this);
+        mEraserButton.setOnTouchListener(this);
     }
 
     private void initializeUI() {
@@ -93,7 +96,8 @@ public class MainActivity extends AppCompatActivity
         mSaveButton             = mActionBarView.findViewById(R.id.save_bar_btn);
         mLoadButton             = mActionBarView.findViewById(R.id.photo_bar_btn);
         mPenButton              = mActionBarView.findViewById(R.id.pen_bar_btn);
-//        mEraserButton           = mActionBarView.findViewById(R.id.eraser_bar_btn);
+        mEraserButton           = mActionBarView.findViewById(R.id.eraser_bar_btn);
+        mClearButton            = mActionBarView.findViewById(R.id.clear_bar_btn);
         mPenColorButton         = mActionBarView.findViewById(R.id.color_bar_btn);
         mBackgroundColorButton  = mActionBarView.findViewById(R.id.background_color_bar_btn);
         mRedoButton             = mActionBarView.findViewById(R.id.redo_bar_btn);
@@ -113,7 +117,7 @@ public class MainActivity extends AppCompatActivity
         mSaveButton.setBackground(null);
         mLoadButton.setBackground(null);
         mPenButton.setBackground(null);
-//        mEraserButton.setBackground(null);
+        mEraserButton.setBackground(null);
         mPenColorButton.setBackground(null);
         mBackgroundColorButton.setBackground(null);
         switch (view.getId()) {
@@ -137,7 +141,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.pen_bar_btn:
-//                mDrawingView.initializePen();
+                mDrawingView.initializePen();
                 mDrawingView.setPenColor(mPenColor);
                 mPenButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
                 break;
@@ -178,6 +182,12 @@ public class MainActivity extends AppCompatActivity
                     startActivity(Intent.createChooser(shareIntent, "分享图片"));
                 }
                 break;
+            case R.id.clear_bar_btn:
+                mDrawingView.clear();break;
+
+            case R.id.eraser_bar_btn:
+                mDrawingView.initializeEraser();
+                mEraserButton.setBackgroundColor(getResources().getColor(R.color.colorBarBtn));
         }
     }
 
