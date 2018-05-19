@@ -196,12 +196,13 @@ public class MainActivity extends AppCompatActivity
                 eraserSizeSeekbar.setOnSeekBarChangeListener(this);
                 eraser_pw.setContentView(eraserView);
                 eraser_pw.setWidth(720);
-                eraser_pw.setHeight(mEraserButton.getHeight());
+                eraser_pw.setHeight(100);
+
                 eraser_pw.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#CCCCCC")));
                 // 设置可以获取焦点
                 eraser_pw.setFocusable(true);
                 eraser_pw.update();
-                eraser_pw.showAsDropDown(view, mEraserButton.getWidth() + 10, -mEraserButton.getHeight(), Gravity.CENTER);
+                eraser_pw.showAsDropDown(view, mEraserButton.getWidth()+10,-(100-mEraserButton.getHeight()/2), Gravity.CENTER);
                 break;
             case R.id.clear_btn:
                 mDrawingView.clear();

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/color_select_layout">
+    android:background="@drawable/color_select_layout"
+    android:theme="@style/AppTheme">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,29 +36,30 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:singleLine="true"
+            android:enabled="false"
             android:textColor="@color/black" />
 
         <LinearLayout
             android:id="@+id/bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginEnd="30dp"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
+            android:orientation="horizontal"
             android:visibility="invisible">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="描边大小"/>
+                android:text="描边大小"
+                android:textColor="#555555" />
 
             <SeekBar
                 android:id="@+id/stroke_size_seekbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
-
 
 
     </LinearLayout>
