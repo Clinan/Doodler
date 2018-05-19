@@ -11,10 +11,6 @@ import com.christophesmet.android.views.colorpicker.ColorPickerView;
 
 import cn.edu.hdu.doodler.R;
 
-/**
- * Created by arter on 2018/5/9.
- */
-
 public class ColorPickerPopupWindow {
     public int selectColor;
     public PopupWindow popupWindow;
