@@ -31,6 +31,7 @@ public class DoodleView extends View {
     private Path mPath;
     private Paint mBitmapPaint;
     private Paint mPaint;
+    private int penColor=Color.BLACK;
     private Paint mPenPaint;
     private float mPenSize = 2.0f;
     private int mPenAlpha = 255;
@@ -161,6 +162,7 @@ public class DoodleView extends View {
         mPenPaint = new Paint();
         mPenPaint.setAntiAlias(true);
         mPenPaint.setAlpha(mPenAlpha);
+        mPenPaint.setColor(penColor);
         mPenPaint.setDither(true);
         mPenPaint.setFilterBitmap(true);
         mPenPaint.setStyle(Paint.Style.STROKE);
@@ -380,13 +382,14 @@ public class DoodleView extends View {
     }
 
     public void setPenColor(@ColorInt int color) {
+        penColor=color;
         mPenPaint.setColor(color);
     }
 
     public
     @ColorInt
     int getPenColor() {
-        return mPenPaint.getColor();
+        return penColor;
     }
 
     public void setEraserSize(float mEraserSize) {
