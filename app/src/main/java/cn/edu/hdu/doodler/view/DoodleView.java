@@ -36,11 +36,11 @@ public class DoodleView extends View {
     private int mPenAlpha = 255;
     private boolean mDrawMode;
     private float mX, mY;
-    private @ColorInt int backgroundColor  = Color.WHITE;
+    private @ColorInt
+    int backgroundColor = Color.WHITE;
     private Bitmap mLoadBitmap;
     private Paint mEraserPaint;
     private float mEraserSize = 10.0f;
-    private int mEraserAlpla = 255;
     private LinkedList<Bitmap> historyBitmaps;
     private LinkedList<Bitmap> removeBitmaps;
     private boolean isUndo = false;
@@ -389,25 +389,21 @@ public class DoodleView extends View {
         return mPenPaint.getColor();
     }
 
-    public void setEraserAlpla(int mEraserAlpla) {
-        this.mEraserAlpla = mEraserAlpla;
-        mEraserPaint.setAlpha(mEraserAlpla);
-    }
-
     public void setEraserSize(float mEraserSize) {
         this.mEraserSize = mEraserSize;
         mEraserPaint.setStrokeWidth(mEraserSize);
     }
 
+    public float getEraserSize(){
+        return mEraserSize;
+    }
     /**
      * @return 当前画布上的内容
      */
     public Bitmap getImageBitmap() {
         return mBitmap;
     }
-    public float getEraserSize(){
-        return mEraserSize;
-    }
+
     public void setPenAlpha(int mPenAlpha) {
         this.mPenAlpha = mPenAlpha;
         mPenPaint.setAlpha(mPenAlpha);

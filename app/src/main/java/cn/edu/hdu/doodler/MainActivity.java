@@ -1,5 +1,6 @@
 package cn.edu.hdu.doodler;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -42,9 +43,11 @@ public class MainActivity extends AppCompatActivity
 
     private ImageButton mPenButton, mUndoButton, mRedoButton, mEraserButton, mToolsButton;
     private DoodleView mDrawingView;
-    private SeekBar mPenSizeSeekbar,mPenAlphaSeekbar, mEraserSeekbar;
+    private SeekBar mPenSizeSeekbar, mPenAlphaSeekbar, mEraserSeekbar;
 
     private DrawerLayout drawerLayout;
+
+    private int mStrokeColor=Color.WHITE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,36 +107,36 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.pen_btn:
                 mDrawingView.initializePen();
-                PopupWindow penPopupWindow=new PopupWindow(getApplicationContext());
-                View penAttrView=View.inflate(getApplicationContext(),R.layout.pen_param_layout,null);
+                PopupWindow penPopupWindow = new PopupWindow(getApplicationContext());
+                View penAttrView = View.inflate(getApplicationContext(), R.layout.pen_param_layout, null);
                 penPopupWindow.setContentView(penAttrView);
                 penPopupWindow.setWidth(mDrawingView.getWidth());
                 penPopupWindow.setHeight(200);
-                mPenSizeSeekbar=penAttrView.findViewById(R.id.pen_size_seekBar);
+                mPenSizeSeekbar = penAttrView.findViewById(R.id.pen_size_seekBar);
                 mPenSizeSeekbar.setOnSeekBarChangeListener(this);
-                mPenAlphaSeekbar=penAttrView.findViewById(R.id.pen_alpha_seekBar);
+                mPenAlphaSeekbar = penAttrView.findViewById(R.id.pen_alpha_seekBar);
                 mPenAlphaSeekbar.setOnSeekBarChangeListener(this);
-                mPenSizeSeekbar.setProgress((int)mDrawingView.getPenSize());
+                mPenSizeSeekbar.setProgress((int) mDrawingView.getPenSize());
                 mPenAlphaSeekbar.setProgress(mDrawingView.getPenAlpha());
                 penPopupWindow.update();
                 penPopupWindow.setFocusable(true);
                 penPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
-                penPopupWindow.showAsDropDown(mPenButton,0,2,Gravity.CENTER);
+                penPopupWindow.showAsDropDown(mPenButton, 0, 2, Gravity.CENTER);
                 break;
 
             case R.id.eraser_btn:
                 mDrawingView.initializeEraser();
-                PopupWindow eraserPopupWindow=new PopupWindow(getApplicationContext());
-                View eraserAttrView=View.inflate(getApplicationContext(),R.layout.eraser_param_layout,null);
+                PopupWindow eraserPopupWindow = new PopupWindow(getApplicationContext());
+                View eraserAttrView = View.inflate(getApplicationContext(), R.layout.eraser_param_layout, null);
                 eraserPopupWindow.setContentView(eraserAttrView);
-                mEraserSeekbar=eraserAttrView.findViewById(R.id.eraser_size_seekBar);
+                mEraserSeekbar = eraserAttrView.findViewById(R.id.eraser_size_seekBar);
                 mEraserSeekbar.setOnSeekBarChangeListener(this);
                 mEraserSeekbar.setProgress((int) mDrawingView.getEraserSize());
                 eraserPopupWindow.setWidth(mDrawingView.getWidth());
                 eraserPopupWindow.setHeight(200);
                 eraserPopupWindow.setFocusable(true);
                 eraserPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
-                eraserPopupWindow.showAsDropDown(mEraserButton,0,2,Gravity.CENTER);
+                eraserPopupWindow.showAsDropDown(mEraserButton, 0, 2, Gravity.CENTER);
                 break;
 
             case R.id.tools_btn:
@@ -290,8 +293,55 @@ public class MainActivity extends AppCompatActivity
                 drawerLayout.closeDrawer(Gravity.LEFT);
                 break;
 
+            case R.id.photo_stroke_item:
+                final int size;
+                ColorPickerDialog photoDialog = new ColorPickerDialog.Builder(this, mStrokeColor)   //mColor:初始颜色
+                        .setHexValueEnabled(true)               //是否显示颜色值
+                        .setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
+                            @Override
+                            public void onColorChanged(int i) {
+                                mStrokeColor = i;
+                            }
+                        }) //设置监听颜色改变的监听器
+                        .build();
+                photoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+
+                        PopupWindow eraserPopupWindow = new PopupWindow(getApplicationContext());
+                        View eraserAttrView = View.inflate(getApplicationContext(), R.layout.stroke_param_layout, null);
+                        eraserPopupWindow.setContentView(eraserAttrView);
+                        SeekBar mStrokeSeekbar = eraserAttrView.findViewById(R.id.stroke_size_seekBar);
+                        mStrokeSeekbar.setProgress((int) mDrawingView.getEraserSize());
+                        mStrokeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                mDrawingView.strokeImage(mStrokeColor,progress);
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+                        eraserPopupWindow.setWidth(mDrawingView.getWidth());
+                        eraserPopupWindow.setHeight(200);
+                        eraserPopupWindow.setFocusable(true);
+                        eraserPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#00000000")));
+                        eraserPopupWindow.showAsDropDown(mEraserButton, 0, 2, Gravity.CENTER);
+                    }
+                });
+                photoDialog.show();//展示
+                drawerLayout.closeDrawer(Gravity.LEFT);
+                break;
 
             case R.id.pen_color_item:
+                mDrawingView.initializePen();
                 ColorPickerDialog ss = new ColorPickerDialog.Builder(MainActivity.this, mDrawingView.getPenColor())   //mColor:初始颜色
                         .setHexValueEnabled(true)               //是否显示颜色值
                         .setOnColorChangedListener(new ColorPickerDialog.OnColorChangedListener() {
