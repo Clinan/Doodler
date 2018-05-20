@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <item
+        android:id="@+id/save_item"
+        android:icon="@drawable/ic_save_black_24dp"
+        android:title="保存" />
+
+    <item
+        android:id="@+id/share_item"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="分享" />
+    <item
+        android:id="@+id/wallet_item"
+        android:icon="@drawable/ic_photo_black_24dp"
+        android:title="相册" />
+
+    <item
+        android:id="@+id/pen_color_item"
+        android:icon="@drawable/ic_color_lens_black_24dp"
+        android:title="画笔颜色" />
+
+    <item
+        android:id="@+id/background_color_item"
+        android:icon="@drawable/ic_format_color_fill_black_24dp"
+        android:title="填充背景色" />
+    <item
+        android:id="@+id/clear_item"
+        android:icon="@drawable/ic_delete_black_24dp"
+        android:title="清除画布" />
+
+</menu>

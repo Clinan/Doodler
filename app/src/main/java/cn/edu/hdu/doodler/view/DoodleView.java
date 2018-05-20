@@ -36,8 +36,7 @@ public class DoodleView extends View {
     private int mPenAlpha = 255;
     private boolean mDrawMode;
     private float mX, mY;
-    private @ColorInt
-    int backgroupColor = Color.WHITE;
+    private @ColorInt int backgroundColor  = Color.WHITE;
     private Bitmap mLoadBitmap;
     private Paint mEraserPaint;
     private float mEraserSize = 10.0f;
@@ -239,7 +238,7 @@ public class DoodleView extends View {
     }
 
     public void clear() {
-        mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
+        mCanvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
         setBackgroundColor(Color.WHITE);
         invalidate();
     }
@@ -250,7 +249,7 @@ public class DoodleView extends View {
     public void undo() {
         if (historyBitmaps != null && historyBitmaps.size() > 0) {
             // 清空画布
-            mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
+            mCanvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
             Bitmap undoBitmap = historyBitmapsRemoveLast();
             if (!isUndo) {
                 isUndo = true;
@@ -270,7 +269,7 @@ public class DoodleView extends View {
     public void redo() {
         if (removeBitmaps != null && removeBitmaps.size() > 0) {
             // 清空画布
-            mCanvas.drawColor(backgroupColor, PorterDuff.Mode.CLEAR);
+            mCanvas.drawColor(backgroundColor, PorterDuff.Mode.CLEAR);
             Bitmap redoBitmap = removeBitmapsRemoveLast();
             if (!isRedo) {
                 isRedo = true;
@@ -363,9 +362,9 @@ public class DoodleView extends View {
      */
     @Override
     public void setBackgroundColor(int color) {
-        backgroupColor = color;
+        backgroundColor = color;
         int[] fillColor = new int[getWidth() * getHeight()];
-        Arrays.fill(fillColor, backgroupColor);
+        Arrays.fill(fillColor, backgroundColor);
         mCanvas.drawColor(color);
         super.setBackgroundColor(color);
         add2HistoryBitmaps(mBitmap.copy(Bitmap.Config.ARGB_8888, true));
@@ -406,8 +405,17 @@ public class DoodleView extends View {
     public Bitmap getImageBitmap() {
         return mBitmap;
     }
-
+    public float getEraserSize(){
+        return mEraserSize;
+    }
     public void setPenAlpha(int mPenAlpha) {
         this.mPenAlpha = mPenAlpha;
+        mPenPaint.setAlpha(mPenAlpha);
+    }
+    public int getPenAlpha(){
+        return mPenAlpha;
+    }
+    public int getBackgroundColor(){
+        return backgroundColor;
     }
 }
